@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Список дел</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Домой <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Добавить задачу</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Выполненные задачи</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h2>Добавить новую задачу</h2>
+        <form id="taskForm">
+            <div class="form-group">
+                <label for="taskName">Название задачи</label>
+                <input type="text" class="form-control" id="taskName" placeholder="Введите название задачи" required>
+            </div>
+            <div class="form-group">
+                <label for="taskDescription">Описание задачи</label>
+                <textarea class="form-control" id="taskDescription" rows="3" placeholder="Введите описание задачи" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Добавить задачу</button>
+        </form>
+    </div>
+
+    <div class="container mt-4">
+        <h2>Список задач</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">№</th>
+                    <th scope="col">Название задачи</th>
+                    <th scope="col">Описание задачи</th>
+                    <th scope="col">Действия</th>
+                </tr>
+            </thead>
+            <tbody id="taskList">
+
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            let taskId = 1;
+            $('#taskForm').on('submit', function(event) {
+                event.preventDefault();
+                const taskName = $('#taskName').val();
+                const taskDescription = $('#taskDescription').val();
+                const newRow = `
+                    <tr id="task-${taskId}">
+                        <th scope="row">${taskId}</th>
+                        <td>${taskName}</td>
+                        <td>${taskDescription}</td>
+                        <td>
+                            <button class="btn btn-success btn-sm complete-task" data-task-id="${taskId}">✔</button>
+                            <button class="btn btn-danger btn-sm delete-task" data-task-id="${taskId}">✘</button>
+                        </td>
+                    </tr>
+                `;
+                $('#taskList').append(newRow);
+                $('#taskForm')[0].reset();
+                taskId++;
+            });
+
+            $(document).on('click', '.complete-task', function() {
+                const taskId = $(this).data('task-id');
+                $(`#task-${taskId}`).addClass('table-success');
+            });
+
+            $(document).on('click', '.delete-task', function() {
+                const taskId = $(this).data('task-id');
+                $(`#task-${taskId}`).remove();
+            });
+        });
+    </script>
+</body>
+</html>
